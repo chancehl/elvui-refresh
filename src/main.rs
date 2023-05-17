@@ -2,7 +2,6 @@ use clap::Parser;
 use colored::Colorize;
 use models::args::Args;
 use models::tags::Tags;
-use spinners::{Spinner, Spinners};
 use std::env;
 use std::path::PathBuf;
 use std::{error::Error, process};
@@ -49,17 +48,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
     // Log latest version
     logger.info(format!("Latest version: {}", &latest.name.green()));
 
-    // Instantiate spinner
-    let mut download_spinner = Spinner::new(
-        Spinners::Line,
-        "Downloading and extracting latest version".to_string(),
-    );
-
     // Download and extract file
     download_and_extract(&latest.zipball_url, addons_folder).await?;
-
-    // Stop download spinner
-    download_spinner.stop_with_newline();
 
     // Inform user of success
     logger.info(format!(
