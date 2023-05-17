@@ -3,6 +3,8 @@ use colored::Colorize;
 use models::args::Args;
 use models::tags::Tags;
 use spinners::{Spinner, Spinners};
+use std::env;
+use std::path::PathBuf;
 use std::{error::Error, process};
 use utils::download_and_extract::download_and_extract;
 use utils::logger::{LogLevel, Logger};
@@ -23,10 +25,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
             logger.info(format!("If you don't want to provide the -f/--addons-folder flag every time you execute this command, you can set the {} environment variable", "$BLIZZARD_ADDONS_FOLDER".yellow()));
             dir
         }
-        None => {
-            logger.log(LogLevel::Error, format!("You must provide either a {} flag specifying your Blizzard addons folder or set the {} variable", "-f/--addons-folder".yellow(), "$BLIZZARD_ADDONS_FOLDER".yellow()));
-            process::exit(1);
-        }
+        None => match env::var("BLIZZARD_ADDONS_FOLDER") {
+            Ok(loc) => PathBuf::from(loc),
+            Err(_) => {
+                logger.log(LogLevel::Error, format!("You must provide either a {} flag specifying your Blizzard addons folder or set the {} variable", "-f/--addons-folder".yellow(), "$BLIZZARD_ADDONS_FOLDER".yellow()));
+                process::exit(1);
+            }
+        },
     };
 
     // Tell user we're fetching version info
