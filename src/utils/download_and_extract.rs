@@ -68,22 +68,28 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
     fs::remove_file(temp_zip_path)?;
 
     // Parse out the top level directory (this is necessary because github includes a folder in the directory with the tag name, but Blizzard just wants the files)
-    let nested_path = fs::read_dir(&temp_dir)?
+    let addon_files_path = fs::read_dir(&temp_dir)?
         .map(|d| d.unwrap().path())
         .next()
         .expect("Failed to unwrap files");
 
+    // Tell the user where we found the ElvUI files at
     logger.info(format!(
-        "Located nested ElvUI directories at {:?}",
-        nested_path
+        "Located nested ElvUI directories/files at {:?}",
+        addon_files_path
     ));
 
-    // Copy
-    copy_items(
-        &Vec::from([nested_path]),
-        &out_dir,
-        &CopyOptions::new().overwrite(true).copy_inside(true),
-    )?;
+    let addon_files =
+        fs::read_dir(&addon_files_path)?.map(|d| d.expect("Could not parse addon file").path());
+
+    for addon_file in addon_files {
+        // copy
+        copy_items(
+            &Vec::from([addon_file]),
+            &out_dir,
+            &CopyOptions::new().overwrite(true),
+        )?;
+    }
 
     // Tell the user we're extracting their files
     logger.info(format!("Removing directory {:?}", &temp_dir.path()));
