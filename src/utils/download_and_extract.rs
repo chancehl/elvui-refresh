@@ -55,7 +55,7 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
     let mut archive = ZipArchive::new(File::open(&temp_zip_path).expect("could not open file"))?;
 
     // Extract file
-    archive.extract(&temp_dir.path())?;
+    archive.extract(temp_dir.path())?;
 
     // Tell the we're copying their files
     logger.info(format!(
@@ -70,8 +70,13 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
     // Parse out the top level directory (this is necessary because github includes a folder in the directory with the tag name, but Blizzard just wants the files)
     let nested_path = fs::read_dir(&temp_dir)?
         .map(|d| d.unwrap().path())
-        .nth(0)
+        .next()
         .expect("Failed to unwrap files");
+
+    logger.info(format!(
+        "Located nested ElvUI directories at {:?}",
+        nested_path
+    ));
 
     // Copy
     copy_items(
