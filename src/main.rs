@@ -20,6 +20,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     // Instantiate logger
     let logger = &Logger::new();
 
+    // Determine the right addons folder location
     let addons_folder = match args.addons_folder {
         Some(dir) => {
             logger.info(format!("If you don't want to provide the -f/--addons-folder flag every time you execute this command, you can set the {} environment variable", "$BLIZZARD_ADDONS_FOLDER".yellow()));
@@ -28,7 +29,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         None => match env::var("BLIZZARD_ADDONS_FOLDER") {
             Ok(loc) => PathBuf::from(loc),
             Err(_) => {
-                logger.log(LogLevel::Error, format!("You must provide either a {} flag specifying your Blizzard addons folder or set the {} variable", "-f/--addons-folder".yellow(), "$BLIZZARD_ADDONS_FOLDER".yellow()));
+                logger.info(format!("You must provide either a {} flag specifying your Blizzard addons folder or set the {} variable", "-f/--addons-folder".yellow(), "$BLIZZARD_ADDONS_FOLDER".yellow()));
                 process::exit(1);
             }
         },
@@ -42,6 +43,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .get_tags("tukui-org".to_owned(), "ElvUI".to_owned())
         .await?;
 
+    // Grab latest
     let latest = &tags[0];
 
     // Log latest version
@@ -56,14 +58,16 @@ async fn main() -> Result<(), Box<dyn Error>> {
     // Download and extract file
     download_and_extract(&latest.zipball_url, addons_folder).await?;
 
-    // Inform user of succcess
+    // Stop download spinner
     download_spinner.stop_with_newline();
 
+    // Inform user of success
     logger.info(format!(
         "{} Upgraded ElvUI to version {}",
         "Success!".green(),
         &latest.name.green()
     ));
 
+    // Exit
     Ok(())
 }
