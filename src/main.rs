@@ -19,6 +19,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
     // Instantiate logger
     let logger = &Logger::new();
 
+    // Tell user we're starting
+    logger.info("Executing".yellow().to_string());
+
     // Determine the right addons folder location
     let addons_folder = match args.addons_folder {
         Some(dir) => {
@@ -35,7 +38,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     };
 
     // Tell user we're fetching version info
-    logger.info("Fetching latest ElvUI version from Github".to_string());
+    logger.info("Fetching latest ElvUI version from Github...".to_string());
 
     // Query for github repo tags
     let tags = octocrab::instance()

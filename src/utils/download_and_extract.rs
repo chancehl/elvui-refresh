@@ -18,7 +18,7 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
     let client = reqwest::Client::new();
 
     // Tell user we're downloading
-    logger.info("Downloading zip file from Github".to_string());
+    logger.info("Downloading addon source code...".to_string());
 
     // Stream the response body of the latest tag zip
     let stream = client
@@ -36,9 +36,6 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
     // Define (temp) file path
     let temp_zip_path = temp_dir.path().join("addon.zip");
 
-    // Tell the user about the file we created
-    logger.info(format!("Saving .zip to {:?}", &temp_zip_path));
-
     // Create the (temporary) zipfile on disk
     let mut temp_file = File::create(&temp_zip_path)?;
 
@@ -49,7 +46,7 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
     io::copy(&mut content, &mut temp_file)?;
 
     // Tell the user we're extracting their files
-    logger.info(format!("Extracting addon files to {:?}", &temp_dir.path()));
+    logger.info("Extracting addon files...".to_string());
 
     // Create a new archive object
     let mut archive = ZipArchive::new(File::open(&temp_zip_path).expect("could not open file"))?;
@@ -58,11 +55,7 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
     archive.extract(temp_dir.path())?;
 
     // Tell the we're copying their files
-    logger.info(format!(
-        "Copying addon files from {:?} to {:?}",
-        &temp_dir.path(),
-        &out_dir
-    ));
+    logger.info("Copying addon files...".to_string());
 
     // Remove zip file after we're done so we don't copy it over
     fs::remove_file(temp_zip_path)?;
@@ -72,12 +65,6 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
         .map(|d| d.unwrap().path())
         .next()
         .expect("Failed to unwrap files");
-
-    // Tell the user where we found the ElvUI files at
-    logger.info(format!(
-        "Located nested ElvUI directories/files at {:?}",
-        addon_files_path
-    ));
 
     let addon_files =
         fs::read_dir(&addon_files_path)?.map(|d| d.expect("Could not parse addon file").path());
@@ -92,7 +79,7 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
     }
 
     // Tell the user we're extracting their files
-    logger.info(format!("Removing directory {:?}", &temp_dir.path()));
+    logger.info("Cleaning up...".to_string());
 
     // Clean up temp dir
     temp_dir.close()?;
