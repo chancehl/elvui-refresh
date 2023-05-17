@@ -1,6 +1,6 @@
 [package]
 name = "elvui-refresh"
-version = "1.0.0"
+version = "1.0.2"
 edition = "2021"
 description = "A program to download, extract and install the latest version of ElvUI"
 license = "MIT"
