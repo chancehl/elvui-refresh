@@ -2,6 +2,8 @@
 name = "elvui-refresh"
 version = "0.1.0"
 edition = "2021"
+description = "A program to download, extract and install the latest version of ElvUI"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
