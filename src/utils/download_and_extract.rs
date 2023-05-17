@@ -1,4 +1,5 @@
 use super::logger::Logger;
+use fs_extra::{copy_items, dir::CopyOptions};
 use hyper::header::USER_AGENT;
 use std::{
     error::Error,
@@ -8,8 +9,6 @@ use std::{
 };
 use tempfile::tempdir;
 use zip::ZipArchive;
-
-use super::copy_directory::copy_directory;
 
 pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box<dyn Error>> {
     // Instantiate logger
@@ -72,10 +71,17 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
         .path();
 
     // Copy
-    copy_directory(&elvui_dir, &out_dir)?;
+    let mut paths = Vec::new();
 
-    // Remove the top level tag directory so we don't have duplicate assets
-    fs::remove_dir_all(elvui_dir)?;
+    paths.push(&elvui_dir);
+
+    println!("elvui dir = {:?}", elvui_dir);
+
+    copy_items(
+        &paths,
+        &out_dir,
+        &CopyOptions::new().overwrite(true).copy_inside(true),
+    )?;
 
     // Tell the user we're extracting their files
     logger.info(format!(
