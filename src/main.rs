@@ -7,7 +7,7 @@ use std::env;
 use std::path::PathBuf;
 use std::{error::Error, process};
 use utils::download_and_extract::download_and_extract;
-use utils::logger::{LogLevel, Logger};
+use utils::logger::Logger;
 
 mod models;
 mod utils;
