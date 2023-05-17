@@ -43,9 +43,7 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
     archive.extract(&out_dir)?;
 
     // Parse out the top level directory (this is necessary because github includes a folder in the directory with the tag name, but Blizzard just wants the files)
-    let elvui_dir = fs::read_dir(&out_dir)?
-        .into_iter()
-        .nth(0)
+    let elvui_dir = fs::read_dir(&out_dir)?.next()
         .expect("Could not locate top level ElvUI directory")?
         .path();
 
