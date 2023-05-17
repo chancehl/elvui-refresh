@@ -34,13 +34,13 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
     logger.info(format!("Created temp directory at {:?}", &temp_dir.path()));
 
     // Define (temp) file path
-    let path = temp_dir.path().join("addon.zip");
+    let temp_zip_path = temp_dir.path().join("addon.zip");
 
     // Tell the user about the file we created
-    logger.info(format!("Saving .zip to {:?}", &path));
+    logger.info(format!("Saving .zip to {:?}", &temp_zip_path));
 
     // Create the (temporary) zipfile on disk
-    let mut temp_file = File::create(&path)?;
+    let mut temp_file = File::create(&temp_zip_path)?;
 
     // Stream to a cursor
     let mut content = Cursor::new(stream.bytes().await?);
@@ -52,7 +52,7 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
     logger.info(format!("Extracting addon files to {:?}", &temp_dir.path()));
 
     // Create a new archive object
-    let mut archive = ZipArchive::new(File::open(&path).expect("could not open file"))?;
+    let mut archive = ZipArchive::new(File::open(&temp_zip_path).expect("could not open file"))?;
 
     // Extract file
     archive.extract(&temp_dir.path())?;
@@ -64,6 +64,9 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
         &out_dir
     ));
 
+    // Remove zip file after we're done so we don't copy it over
+    fs::remove_file(temp_zip_path)?;
+
     // Parse out the top level directory (this is necessary because github includes a folder in the directory with the tag name, but Blizzard just wants the files)
     let elvui_dir = fs::read_dir(&temp_dir)?
         .next()
@@ -74,8 +77,6 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
     let mut paths = Vec::new();
 
     paths.push(&elvui_dir);
-
-    println!("elvui dir = {:?}", elvui_dir);
 
     copy_items(
         &paths,
