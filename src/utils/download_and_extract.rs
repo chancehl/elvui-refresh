@@ -68,27 +68,20 @@ pub async fn download_and_extract(url: &str, out_dir: PathBuf) -> Result<(), Box
     fs::remove_file(temp_zip_path)?;
 
     // Parse out the top level directory (this is necessary because github includes a folder in the directory with the tag name, but Blizzard just wants the files)
-    let elvui_dir = fs::read_dir(&temp_dir)?
-        .next()
-        .expect("Could not locate top level ElvUI directory")?
-        .path();
+    let nested_path = fs::read_dir(&temp_dir)?
+        .map(|d| d.unwrap().path())
+        .nth(0)
+        .expect("Failed to unwrap files");
 
     // Copy
-    let mut paths = Vec::new();
-
-    paths.push(&elvui_dir);
-
     copy_items(
-        &paths,
+        &Vec::from([nested_path]),
         &out_dir,
         &CopyOptions::new().overwrite(true).copy_inside(true),
     )?;
 
     // Tell the user we're extracting their files
-    logger.info(format!(
-        "Removing files at {:?} (note: the directory will be removed as well)",
-        &temp_dir.path()
-    ));
+    logger.info(format!("Removing directory {:?}", &temp_dir.path()));
 
     // Clean up temp dir
     temp_dir.close()?;
