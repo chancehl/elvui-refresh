@@ -13,10 +13,12 @@ Run `cargo install elvui-refresh`
 Open `bash.exe` on windows and run the following:
 
 ```
-$ curl https://github.com/chancehl/elvui-refresh/releases/download/v1.0.2/elvui-refresh-x86_64-pc-windows-msvc.zip --output %userprofile%\Downloads\elvui-refresh.zip -L
+$ curl https://github.com/chancehl/elvui-refresh/releases/download/v1.0.3/elvui-refresh-x86_64-pc-windows-msvc.tar.gz --output %userprofile%\Downloads\elvui-refresh.tar.gz -L
 
-$ tar -zvxf %userprofile%\Downloads\elvui-refresh.tar.gz
+$ tar -xf %userprofile%\Downloads\elvui-refresh.tar.gz
 ```
+
+Replace the version with the one that you are trying to download (latest = 1.0.3). You can now execute the program by running: `%userprofile%\Downloads\elvui-refresh.exe`.
 
 ## Help
 
