@@ -55,6 +55,38 @@ $ C:\Path\To\Where\You\Extracted\The\Zip\elvui-refresh.exe --version
 $ elvui-refresh --version
 ```
 
+## Running the program
+
+With an explicit addon folder location:
+
+```
+$ elvui-refresh --addon-folder C:\Path\To\Your\Blizzard\Addons\Folder
+```
+
+With a variable instead of the addon folder flag
+
+```
+$ EXPORT BLIZZARD_ADDONS_FOLDER="C:\Path\To\Your\Blizzard\Addons\Folder"
+$ elvui-refresh
+```
+
+The output of both commands should look something like this if it was successful:
+
+```
+[info] Executing
+[info] If you don't want to provide the -f/--addons-folder flag every time you execute this command, you can set the $BLIZZARD_ADDONS_FOLDER environment variable
+[info] Fetching latest ElvUI version from Github...
+[info] Latest version: v13.32
+[info] Downloading addon source code...
+[info] Created temp directory at "/tmp/.tmpwZsQpc"
+[info] Extracting addon files...
+[info] Copying addon files...
+[info] Cleaning up...
+[info] Success! Upgraded ElvUI to version v13.32
+```
+
+If you see anything that deviates significantly from this example, it's likely the program failed to execute. If that happens, you can open an issue in this Github repository or contact me.
+
 ## Help
 
 ```
