@@ -6,7 +6,11 @@ This tool allows users to download and install the latest version of ElvUI to th
 
 ### (Easiest) Are you a Rustacean? 🦀
 
-Run `cargo install elvui-refresh`
+Run `cargo install elvui-refresh`. Afterwards you should be able to run the program like this:
+
+```
+$ elvui-refresh --version
+```
 
 ### Semi-automated installation 🚙
 
@@ -32,7 +36,7 @@ Replace the version with the one that you are trying to download (latest = 1.0.3
 6. You should now be able to run the program like this:
 
 ```
-$ C:\Path\To\Where\You\Extracted\The\Zip\elvui-refresh.exe --help
+$ C:\Path\To\Where\You\Extracted\The\Zip\elvui-refresh.exe --version
 ```
 
 ### Adding the exe to $PATH on Windows 🪟
@@ -48,7 +52,7 @@ $ C:\Path\To\Where\You\Extracted\The\Zip\elvui-refresh.exe --help
 9. Reopen your terminal and you should be able to run like this:
 
 ```
-$ elvui-refresh --help
+$ elvui-refresh --version
 ```
 
 ## Help
