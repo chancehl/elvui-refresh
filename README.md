@@ -99,3 +99,11 @@ Options:
   -h, --help                           Print help
   -V, --version                        Print version
 ```
+
+### Finding your Blizzard addons folder
+
+1. Open the Battle.net launcher
+2. Click the World of Warcraft tab at the top
+3. There should be a cogwheel icon **next to the play button** - click it
+4. Select "show in folder"
+5. From there your addons folder will be located inside `_retail_/interface/AddOns` (this is the value you'll feed into the program)
